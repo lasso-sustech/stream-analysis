@@ -19,7 +19,7 @@ with open('config.json') as f:
 
 ##
 if len(sys.argv)>1:
-    FILE=sys.argv[0]
+    FILE=sys.argv[1]
 else:
     _keys = list(CONFIG.keys())
     for i,x in enumerate(_keys):

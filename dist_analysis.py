@@ -3,6 +3,10 @@ import numpy as np
 import numba
 from numba import prange
 import matplotlib.pyplot as plt
+import pickle, tempfile, hashlib
+from pathlib import Path
+
+HASH = lambda str: hashlib.sha1(str.encode()).hexdigest()[:6]
 
 @numba.jit(parallel=True)
 def _get_pmf_3d(pmf_x1, pmf_x2, y):
@@ -46,6 +50,15 @@ def defaultAppendFn(ptr, packet):
     pass
 
 def Aggregate(packets, limit:float, appendFn, filterFn=None):
+    _name = HASH( f'{packets.input_filename}-{limit}' )
+    _file = Path(tempfile.gettempdir()) / _name
+    if _file.exists():
+        try:
+            with open(_file, 'rb') as fp:
+                return pickle.load(fp)
+        except:
+            pass
+    ##
     results = list()
     ptr = None
     for idx,packet in enumerate(packets):
@@ -64,6 +77,9 @@ def Aggregate(packets, limit:float, appendFn, filterFn=None):
                 results.append(ptr)
                 ptr = [_timestamp, appendFn(None, packet)]
         pass
+    ##
+    with open(_file, 'wb') as fp:
+        pickle.dump(results, fp)
     return results
 
 def Analyze3D(y_timeline):
