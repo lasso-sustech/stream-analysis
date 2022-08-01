@@ -14,7 +14,7 @@ except:
     ROOT_FOLDER = Path('traces')
 
 ##
-with open('config.json') as f:
+with open(ROOT_FOLDER/'config.json') as f:
     CONFIG = json.load(f)
 
 ##
