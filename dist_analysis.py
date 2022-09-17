@@ -50,7 +50,7 @@ def defaultAppendFn(ptr, packet):
     pass
 
 def Aggregate(packets, limit:float, appendFn, filterFn=None):
-    _name = HASH( f'{packets.input_filename}-{limit}' )
+    _name = HASH( f'{packets.input_filepath}-{limit}' )
     _name = f'stream-{_name}'
     _file = Path(tempfile.gettempdir()) / _name
     if _file.exists():

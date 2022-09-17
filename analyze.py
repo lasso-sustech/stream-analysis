@@ -42,6 +42,12 @@ time_delta = np.diff( _timestamp )
 _length = np.array(_length[1:])
 
 ##
+export_filename = (ROOT_FOLDER/FILE).with_suffix('.npy')
+_delta_nano = np.array(time_delta) * 1E9
+export = np.stack([_delta_nano, _length]).T.astype(np.uint64)
+np.save(export_filename, export)
+
+##
 if 'interval_percent' in p:
     _cutoff = p['interval_cutoff'] if 'interval_cutoff' in p else 1E9
     Analyze(time_delta, percent=p['interval_percent'], cutoff=_cutoff, xlabel='Video Frame Interval (Second)')
